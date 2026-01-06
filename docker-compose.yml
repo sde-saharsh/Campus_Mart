@@ -6,9 +6,9 @@ services:
     environment:
       - PORT=8001
       - CLIENT_URL=${CLIENT_URL:-http://localhost:5173,http://localhost:5174}
-      - MONGODB_URI=${MONGODB_URI:-mongodb+srv://saharshkhalokar14:saharsh123@cluster0.by0ldgz.mongodb.net/}
-      - JWT_SECRET=${JWT_SECRET:-saharsh}
-      - CLOUDINARY_URL=${CLOUDINARY_URL:-cloudinary://466589615692773:8OStB4iBZ9u3LVcLeX5K1ZBnQKM@dijj9foey}
+      - MONGODB_URI=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - CLOUDINARY_URL=${CLOUDINARY_URL}
     networks:
       - app-network
 
