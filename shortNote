@@ -1,0 +1,9 @@
+Campus Mart – MERN Stack E-commerce Platform
+
+Developed a full-stack e-commerce platform using MERN Stack (MongoDB, Express.js, React.js, Node.js) with JWT Authentication and Role-Based Access Control (RBAC).
+
+Implemented real-time buyer–seller communication using Socket.io, enabling instant chat and live notifications.
+
+Built a responsive Admin Dashboard for user management, product moderation, and analytics.
+
+Deployed frontend, backend, and admin services using Docker & Docker Compose, with optimized image handling via Cloudinary.
