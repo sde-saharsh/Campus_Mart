@@ -260,7 +260,6 @@ const UserAccount = () => {
                                 <InfoCard label="Mobile Number" value={user.mobileNo} />
                                 <InfoCard label="College" value={user.collegeName} />
                                 <InfoCard label="Branch" value={user.branch} />
-                                <InfoCard label="Branch" value={user.branch} />
                                 <InfoCard label="Year of Study" value={user.yearOfStudy || "N/A"} />
                                 <InfoCard label="Location" value={user.location?.address || "Not set"} />
                             </>
