@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/api";
-import { FiSearch, FiFilter, FiStar, FiUser, FiMapPin, FiBriefcase } from "react-icons/fi";
+import { FiSearch, FiMapPin, FiHeart, FiEye, FiClock } from "react-icons/fi";
 
 const Items = () => {
   const [items, setItems] = useState([]);
@@ -13,10 +13,10 @@ const Items = () => {
       college: "",
       location: ""
   });
-  const [showFilters, setShowFilters] = useState(false);
 
   const categories = ["All", "Electronics", "Books", "Clothing", "Furniture", "Sports", "Other"];
 
+  // Fetch Items
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -34,10 +34,10 @@ const Items = () => {
     fetchItems();
   }, []);
 
+  // Filter Logic
   useEffect(() => {
     let result = items;
-    
-    // Search Filter
+    // Search
     if (search) {
       result = result.filter(
         (item) =>
@@ -45,26 +45,22 @@ const Items = () => {
           item.description.toLowerCase().includes(search.toLowerCase())
       );
     }
-    
-    // Category Filter
+    // Category
     if (filters.category !== "All") {
       result = result.filter((item) => item.category === filters.category);
     }
-
-    // College Filter (Match seller's college)
+    // College
     if (filters.college) {
         result = result.filter(item => 
             item.seller?.collegeName?.toLowerCase().includes(filters.college.toLowerCase())
         );
     }
-
-    // Location Filter (Match seller's location address)
+    // Location
     if (filters.location) {
         result = result.filter(item => 
             item.seller?.location?.address?.toLowerCase().includes(filters.location.toLowerCase())
         );
     }
-
     setFilteredItems(result);
   }, [search, filters, items]);
 
@@ -72,154 +68,107 @@ const Items = () => {
       setFilters(prev => ({ ...prev, [key]: value }));
   }
 
-  // Extract unique colleges and locations for suggestions/dropdown if needed
-  // For now simple inputs or we can derive unique values:
-  const locations = [...new Set(items.map(i => i.seller?.location?.address).filter(Boolean))];
-  const colleges = [...new Set(items.map(i => i.seller?.collegeName).filter(Boolean))];
-
   return (
-    <div className="min-h-screen bg-primary py-12 px-4 md:px-6 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0B0C10] pt-24 pb-12 px-4 md:px-8 transition-colors duration-300 font-sans">
       <div className="max-w-7xl mx-auto">
-        {/* <h1 className="text-4xl font-bold text-text-primary mb-8">Explore Items</h1> */}
+        
+        {/* Search & Filter Section */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-white/10 p-4 mb-8">
+             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                 {/* Search */}
+                 <div className="relative w-full md:w-96">
+                     <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                     <input
+                         type="text"
+                         placeholder="Search for items..."
+                         className="w-full pl-12 pr-4 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white placeholder-slate-400 font-medium"
+                         value={search}
+                         onChange={(e) => setSearch(e.target.value)}
+                     />
+                 </div>
 
-        {/* Filters Bar */}
-        {/* Filters Bar */}
-        <div className="bg-surface p-4 rounded-2xl shadow-sm border border-border-color mb-10">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-                
-                {/* Search & Toggle Wrapper */}
-                <div className="w-full md:w-[28rem] lg:w-[32rem] flex gap-2">
-                    <div className="relative flex-grow">
-                        <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <input
-                        type="text"
-                        placeholder="Search items..."
-                        className="w-full pl-12 pr-4 py-2.5 rounded-xl border border-border-color bg-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </div>
-                    {/* Mobile Filter Toggle */}
-                    <button 
-                        onClick={() => setShowFilters(!showFilters)}
-                        className="md:hidden p-2.5 bg-surface border border-border-color rounded-xl text-text-primary hover:bg-gray-50 dark:hover:bg-gray-800 transition shadow-sm"
-                    >
-                        <FiFilter className={showFilters ? "text-emerald-600" : "text-gray-400"} size={20} />
-                    </button>
-                </div>
-
-                {/* Filters Group */}
-                <div className={`flex flex-col md:flex-row gap-4 w-full md:w-auto transition-all duration-300 ease-in-out overflow-hidden ${
-                    showFilters ? "max-h-[500px] opacity-100 mt-4 md:mt-0" : "max-h-0 opacity-0 md:max-h-none md:opacity-100"
-                }`}>
-                    {/* Category */}
-                    <div className="relative min-w-[160px]">
-                        <FiFilter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <select
-                        className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-border-color focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-primary text-text-primary appearance-none cursor-pointer"
+                 {/* Filters */}
+                 <div className="flex gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+                     <select 
+                        className="px-4 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-emerald-500 text-slate-700 dark:text-white font-medium cursor-pointer text-sm"
                         value={filters.category}
                         onChange={(e) => handleFilterChange("category", e.target.value)}
-                        >
-                        {categories.map((cat) => (
-                            <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                        </select>
-                    </div>
-
-                    {/* College Filter */}
-                    <div className="relative min-w-[200px]">
-                        <FiBriefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <input 
-                            type="text"
-                            list="colleges"
-                            placeholder="Filter by College"
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-color bg-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-text-secondary"
-                            value={filters.college}
-                            onChange={(e) => handleFilterChange("college", e.target.value)}
-                        />
-                        <datalist id="colleges">
-                            {colleges.map((c, i) => <option key={i} value={c} />)}
-                        </datalist>
-                    </div>
-
-                    {/* Location Filter */}
-                    <div className="relative min-w-[200px]">
-                        <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <input 
-                            type="text"
+                     >
+                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                     </select>
+                     
+                     <div className="relative min-w-[180px]">
+                        <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                        <input
                             list="locations"
-                            placeholder="Filter by Location"
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-color bg-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-text-secondary"
+                            placeholder="Filter by location..."
+                            className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-emerald-500 text-slate-700 dark:text-white font-medium placeholder-slate-400 text-sm"
                             value={filters.location}
                             onChange={(e) => handleFilterChange("location", e.target.value)}
                         />
-                        <datalist id="locations">
-                            {locations.map((l, i) => <option key={i} value={l} />)}
-                        </datalist>
-                    </div>
-                </div>
-            </div>
+                     </div>
+                 </div>
+             </div>
         </div>
 
         {/* Grid */}
         {loading ? (
-          <p className="text-center text-text-secondary text-lg">Loading items...</p>
+             <div className="flex justify-center items-center h-64">
+                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+             </div>
         ) : filteredItems.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-xl text-text-secondary">No items found matching your filters.</p>
-             <button onClick={() => {setSearch(""); setFilters({category: "All", college: "", location: ""})}} className="text-emerald-600 font-semibold hover:underline mt-2">Clear all filters</button>
+          <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-white/10">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No items found</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-4">Try adjusting your search or filters.</p>
+             <button onClick={() => {setSearch(""); setFilters({category: "All", college: "", location: ""})}} className="text-emerald-500 font-bold hover:underline">Clear Filters</button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredItems.map((item) => (
               <Link
                 to={`/item/${item._id}`}
                 key={item._id}
-                className="group bg-surface rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden border border-border-color"
+                className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
               >
-                <div className="h-32 md:h-56 overflow-hidden relative bg-primary">
+                {/* Standard Image Area */}
+                <div className="aspect-[4/3] relative overflow-hidden bg-slate-100 dark:bg-slate-800">
                   <img
                     src={item.images?.[0] || "/placeholder.png"}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 right-2 backdrop-blur-sm bg-white/70 dark:bg-black/50 px-2 py-0.5 rounded-lg text-[10px] md:text-xs font-bold shadow-sm text-gray-800 dark:text-white">
-                    {item.category}
+                  <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-bold">
+                      ₹{item.price.toLocaleString()}
+                  </div>
+                  <div className="absolute bottom-2 left-2 bg-white/90 dark:bg-slate-800/90 text-slate-800 dark:text-white px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                      {item.category}
                   </div>
                 </div>
                 
-                <div className="p-3 md:p-5 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-1">
-                    <h2 className="text-sm md:text-lg font-bold text-text-primary line-clamp-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
-                      {item.title}
-                    </h2>
-                  </div>
-                  <p className="text-text-secondary text-[10px] md:text-sm mb-2 md:mb-4 line-clamp-2">{item.description}</p>
+                {/* Content Body */}
+                <div className="p-4">
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white mb-1 truncate">
+                    {item.title}
+                  </h2>
                   
-                  <div className="flex items-center justify-between mt-auto mb-3 pt-3 border-t border-border-color">
-                      <div className="flex flex-col">
-                          <div className="flex items-center gap-1.5 text-xs text-text-secondary">
-                              <FiUser className="text-emerald-500" />
-                              <span className="truncate max-w-[80px]">{item.seller?.name}</span>
-                          </div>
+                  <div className="flex items-center gap-2 mb-3">
+                      <div className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                           {item.seller?.name?.charAt(0) || 'U'}
                       </div>
-                      {item.seller?.averageRating > 0 && (
-                          <div className="flex items-center gap-1 text-xs text-yellow-500 font-bold bg-yellow-50 dark:bg-yellow-900/20 px-1.5 py-0.5 rounded-md">
-                              {item.seller?.averageRating?.toFixed(1)} <FiStar className="fill-current" size={10} />
-                          </div>
-                      )}
+                      <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                          {item.seller?.name || "Unknown Seller"}
+                      </span>
                   </div>
 
-                   {/* Location/College Tags on Card */}
-                   <div className="flex gap-2 mb-3 text-[10px] text-text-secondary overflow-hidden">
-                       {item.seller?.location?.address && <span className="flex items-center gap-1 truncate"><FiMapPin /> {item.seller.location.address}</span>}
-                    </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-base md:text-xl font-bold text-emerald-600">₹{item.price}</span>
-                    <span className="hidden md:block text-xs text-gray-400">
-                       {new Date(item.createdAt).toLocaleDateString()}
-                    </span>
+                  <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-white/5 text-xs text-slate-400">
+                      <div className="flex items-center gap-1">
+                          <FiMapPin size={12} />
+                          <span className="truncate max-w-[100px]">{item.seller?.collegeName || "Campus"}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                          <FiClock size={12} />
+                          <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+                      </div>
                   </div>
                 </div>
               </Link>

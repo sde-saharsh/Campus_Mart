@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 
@@ -24,6 +24,9 @@ const Navbar = () => {
   const { unreadCount, notifications } = useNotification();
   const [open, setOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
 
   const ThemeToggle = () => (
     <button 
@@ -98,25 +101,26 @@ const Navbar = () => {
 
   const NavLinks = () => (
     <>
-      <Link to="/" className="nav-link" onClick={() => setOpen(false)}>
+      <Link to="/" className={`nav-link ${isActive("/") ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" : ""}`} onClick={() => setOpen(false)}>
         <FiHome /> Home
+        {isActive("/") && <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-emerald-500 rounded-full md:hidden"></span>}
       </Link>
 
       {user ? (
         <>
-          <Link to="/orders" className="nav-link" onClick={() => setOpen(false)}>
+          <Link to="/orders" className={`nav-link ${isActive("/orders") ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" : ""}`} onClick={() => setOpen(false)}>
             <FiShoppingBag /> Orders
           </Link>
 
-          <Link to="/items" className="nav-link" onClick={() => setOpen(false)}>
+          <Link to="/items" className={`nav-link ${isActive("/items") ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" : ""}`} onClick={() => setOpen(false)}>
             <FiBox /> Items
           </Link>
 
-          <Link to="/favorite" className="nav-link" onClick={() => setOpen(false)}>
+          <Link to="/favorite" className={`nav-link ${isActive("/favorite") ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" : ""}`} onClick={() => setOpen(false)}>
             <FiHeart /> Favorites
           </Link>
 
-          <Link to="/my-account" className="nav-link" onClick={() => setOpen(false)}>
+          <Link to="/my-account" className={`nav-link ${isActive("/my-account") ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" : ""}`} onClick={() => setOpen(false)}>
             {user.image ? (
                 <img src={user.image} alt="Profile" className="w-5 h-5 rounded-full object-cover border-none" />
             ) : (
@@ -125,13 +129,13 @@ const Navbar = () => {
             Account
           </Link>
 
-          <button onClick={logout} className="nav-link text-red-500">
+          <button onClick={logout} className="nav-link text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
             <FiLogOut /> Logout
           </button>
         </>
       ) : (
         <>
-           <Link to="/items" className="nav-link" onClick={() => setOpen(false)}>
+           <Link to="/items" className={`nav-link ${isActive("/items") ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" : ""}`} onClick={() => setOpen(false)}>
             <FiBox /> Browse
           </Link>
           <Link to="/login" className="nav-link" onClick={() => setOpen(false)}>
@@ -148,8 +152,8 @@ const Navbar = () => {
   return (
     <>
       {/* TOP NAVBAR */}
-      <nav className="w-full bg-nav-bg border-b border-border-color shadow-sm fixed top-0 z-50 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <nav className="w-full bg-transparent border-b border-white/5 shadow-sm fixed top-0 z-50 transition-all duration-300 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
 
           {/* Logo */}
           <Link

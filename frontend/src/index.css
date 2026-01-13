@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Tailwind v4 Theme Configuration with Dark Mode */
 @theme {
   /* Semantic Color Tokens */
@@ -12,27 +14,44 @@
   --color-accent: var(--accent);
 }
 
+@utility perspective-1000 {
+  perspective: 1000px;
+}
+@utility translate-z-10 {
+  transform: translateZ(10px);
+}
+
+@keyframes scan-y {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(200%); }
+}
+@utility animate-scan-y {
+    animation: scan-y 2.5s linear infinite;
+}
+
 @layer base {
   :root {
-    /* Light Mode */
-    --bg-primary: #F8FAFC;
+    /* Light Mode - Productivity Clean */
+    --bg-primary: #F0F4F8;
     --bg-surface: #FFFFFF;
-    --nav-bg: #FFFFFF;
+    --nav-bg: rgba(255, 255, 255, 0.8);
     --text-primary: #0F172A;
     --text-secondary: #475569;
     --border-color: #E2E8F0;
     --accent: #10B981;
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
 
   .dark {
-    /* Dark Mode */
-    --bg-primary: #0F172A;
-    --bg-surface: #1E293B;
-    --nav-bg: #020617;
+    /* Dark Mode - Deep Space Efficiency */
+    --bg-primary: #020617; /* Deepest Navy */
+    --bg-surface: #0F172A; /* Slate */
+    --nav-bg: rgba(2, 6, 23, 0.8);
     --text-primary: #F8FAFC;
     --text-secondary: #94A3B8;
-    --border-color: #334155;
+    --border-color: rgba(255, 255, 255, 0.05);
     --accent: #10B981;
+    --card-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.1); /* Emerald Glow */
   }
 
   html {
@@ -49,6 +68,26 @@
     color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+}
+
+/* Productivity Glows */
+@utility glow-emerald {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+@utility glow-emerald-strong {
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.light .glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 /* Navigation Links */
@@ -69,7 +108,7 @@
 }
 
 .dark .nav-link:hover {
-  background-color: #064e3b; /* dark emerald */
+  background-color: rgba(16, 185, 129, 0.1); /* dark emerald alpha */
   color: #34d399;
 }
 
@@ -86,32 +125,37 @@
   color: #dc2626;
 }
 
+.dark .nav-link.text-red-500:hover {
+    background-color: rgba(220, 38, 38, 0.1);
+}
+
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: transparent; 
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #020617;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db; 
+  background: #cbd5e1; 
   border-radius: 4px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #334155;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af; 
+  background: #94a3b8; 
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #475569;
 }
