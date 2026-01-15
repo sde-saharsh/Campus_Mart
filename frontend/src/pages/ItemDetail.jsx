@@ -93,7 +93,7 @@ const ItemDetail = () => {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#020617]">
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#02040a]">
             <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
     );
@@ -103,7 +103,7 @@ const ItemDetail = () => {
     const isFavorite = user?.favorites?.some(f => (typeof f === 'string' ? f : f._id) === item._id) || false;
 
     return (
-        <div ref={containerRef} className="min-h-screen bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-white transition-colors duration-500 overflow-x-hidden">
+        <div ref={containerRef} className="min-h-screen bg-slate-50 dark:bg-[#02040a] text-slate-900 dark:text-white transition-colors duration-500 overflow-x-hidden">
             
             <div className="max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20">
                 <button 

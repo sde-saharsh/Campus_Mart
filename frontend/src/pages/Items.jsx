@@ -69,7 +69,7 @@ const Items = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0B0C10] pt-24 pb-12 px-4 md:px-8 transition-colors duration-300 font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#02040a] pt-24 pb-12 px-4 md:px-8 transition-colors duration-300 font-sans">
       <div className="max-w-7xl mx-auto">
         
         {/* Search & Filter Section */}

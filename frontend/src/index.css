@@ -66,7 +66,7 @@
 
   .dark {
     /* Dark Mode - Deep Space Efficiency */
-    --bg-primary: #020617; /* Deepest Navy */
+    --bg-primary: #02040a; /* Deepest Black/Blue (Home Page Match) */
     --bg-surface: #0F172A; /* Slate */
     --nav-bg: rgba(2, 6, 23, 0.8);
     --text-primary: #F8FAFC;
