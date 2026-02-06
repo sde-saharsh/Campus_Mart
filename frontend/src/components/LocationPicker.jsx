@@ -28,7 +28,7 @@ const LocationPicker = ({ location, setLocation }) => {
   useEffect(() => {
     if (location && location.coordinates && location.coordinates.lat !== 0) {
         setMarkerPosition({ lat: location.coordinates.lat, lng: location.coordinates.lng });
-    } else if (!markerPosition) { 
+    } else if (!markerPosition && isLoaded) { 
          if (navigator.geolocation) {
              navigator.geolocation.getCurrentPosition((position) => {
                  const pos = {
@@ -36,16 +36,31 @@ const LocationPicker = ({ location, setLocation }) => {
                      lng: position.coords.longitude,
                  };
                  setMarkerPosition(pos);
+                 
+                 // Reverse Geocoding for Initial Position
                  if(setLocation) {
-                    setLocation((prev) => ({
-                        ...prev,
-                        coordinates: pos
-                    }));
+                    if (window.google && window.google.maps) {
+                        const geocoder = new window.google.maps.Geocoder();
+                        geocoder.geocode({ location: pos }, (results, status) => {
+                            if (status === "OK" && results[0]) {
+                                setLocation((prev) => ({
+                                    ...prev,
+                                    address: results[0].formatted_address,
+                                    coordinates: pos
+                                }));
+                            } else {
+                                setLocation((prev) => ({
+                                    ...prev,
+                                    coordinates: pos
+                                }));
+                            }
+                        });
+                    }
                  }
              });
          }
     }
-  }, [location?.coordinates?.lat, location?.coordinates?.lng]);
+  }, [location?.coordinates?.lat, location?.coordinates?.lng, isLoaded, markerPosition]);
 
   const onLoad = useCallback(function callback(map) {
     setMap(map);
